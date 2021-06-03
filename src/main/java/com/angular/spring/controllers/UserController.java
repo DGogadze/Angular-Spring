@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("*")
 public class UserController {
     @Autowired
     public UserController(UserService userService) {
@@ -17,7 +18,7 @@ public class UserController {
     }
     private final UserService userService;
 
-    @GetMapping("/user/get")
+    @PostMapping("/user/get")
     public GetUserResponse getUser(@RequestBody GetUserRequest getUserRequest){
         return userService.findUser(getUserRequest);
     }
