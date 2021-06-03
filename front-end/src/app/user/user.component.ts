@@ -17,18 +17,25 @@ export class UserComponent implements OnInit {
   headers = new HttpHeaders({
     'Content-Type': 'application/json'
   })
-  options = { headers: this.headers}
+  options = {headers: this.headers}
 
   private apiUrl = environment.apiUrl
   private loginPath = this.apiUrl + "user/get"
 
-  private data: Login = new Login();
+  private data: Login = new Login()
+
+  loginFormDraw = true
+  profileDraw = false
+
+  user = new Profile()
 
   login(username: string, password: string) {
     this.data.Username = username
     this.data.Password = password
     const body = JSON.stringify(this.data)
-    this.httpClient.post(this.loginPath,body, this.options).subscribe(response => {response})
+    this.loginFormDraw = false
+    this.profileDraw = true
+    this.httpClient.post<any>(this.loginPath, body, this.options).subscribe(response => response)
   }
 
   ngOnInit(): void {
@@ -37,8 +44,19 @@ export class UserComponent implements OnInit {
 }
 
 export class Login {
-  constructor(  ) {
+  constructor() {
   }
+
   Username: string | undefined
   Password: string | undefined
+}
+
+export class Profile {
+  constructor() {
+  }
+
+  operationCode: number = -1
+  operationMessage: string = ""
+  email: string = ""
+  username: string = ""
 }
