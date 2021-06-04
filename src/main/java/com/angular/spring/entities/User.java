@@ -11,17 +11,23 @@ import javax.persistence.Id;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonProperty("id")
+    @JsonProperty("Id")
     private Long id;
 
-    @JsonProperty("username")
+    @JsonProperty("Username")
     private String username;
 
-    @JsonProperty("email")
+    @JsonProperty("Email")
     private String email;
 
-    @JsonProperty("password")
+    @JsonProperty("Password")
     private String password;
+
+    @JsonProperty("Position")
+    private String position;
+
+    @JsonProperty("Phone")
+    private String phone;
 
     public Long getId() {
         return id;
@@ -53,5 +59,21 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

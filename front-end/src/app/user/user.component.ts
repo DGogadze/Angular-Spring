@@ -25,17 +25,32 @@ export class UserComponent implements OnInit {
   private data: Login = new Login()
 
   loginFormDraw = true
-  profileDraw = false
 
-  user = new Profile()
+  incorrectCredentialsText = "Incorrect credentials, try again"
+
+  id = -1
+  operationCode = -1
+  operationMessage = ""
+  email = ""
+  username = ""
+  phone = ""
+  position = ""
 
   login(username: string, password: string) {
     this.data.Username = username
     this.data.Password = password
     const body = JSON.stringify(this.data)
-    this.loginFormDraw = false
-    this.profileDraw = true
-    this.httpClient.post<any>(this.loginPath, body, this.options).subscribe(response => response)
+    this.httpClient.post<UserResponse>(this.loginPath, body, this.options).subscribe(response => {
+      this.operationCode = response.OperationCode
+      this.operationMessage = response.OperationMessage
+      if (response.UserInfo === null)
+        return
+      this.id = response.UserInfo.Id
+      this.email = response.UserInfo.Email
+      this.username = response.UserInfo.Username
+      this.phone = response.UserInfo.Phone
+      this.position = response.UserInfo.Position
+    })
   }
 
   ngOnInit(): void {
@@ -51,12 +66,16 @@ export class Login {
   Password: string | undefined
 }
 
-export class Profile {
-  constructor() {
-  }
+export interface UserResponse{
+  OperationCode: number,
+  OperationMessage: string,
+  UserInfo: UserInfo
+}
 
-  operationCode: number = -1
-  operationMessage: string = ""
-  email: string = ""
-  username: string = ""
+export interface UserInfo{
+  Id: number
+  Email: string
+  Username: string
+  Phone: string
+  Position: string
 }

@@ -13,4 +13,10 @@ public class UserInfo {
 
     @JsonProperty("Username")
     private String username;
+
+    @JsonProperty("Phone")
+    private String phone;
+
+    @JsonProperty("Position")
+    private String position;
 }

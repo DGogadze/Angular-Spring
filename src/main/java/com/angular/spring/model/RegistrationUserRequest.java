@@ -13,4 +13,10 @@ public class RegistrationUserRequest {
 
     @JsonProperty("Password")
     private String password;
+
+    @JsonProperty("Position")
+    private String position;
+
+    @JsonProperty("Phone")
+    private String phone;
 }
