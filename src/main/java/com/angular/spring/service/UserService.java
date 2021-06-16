@@ -46,6 +46,7 @@ public class UserService {
                 getUserResponse.setOperationCode(0);
                 getUserResponse.setOperationMessage("Success");
                 getUserResponse.setUserInfo(userInfo);
+                getUserResponse.setToken(HashUtils.md5hash(username + password));
             } else {
                 getUserResponse.setOperationCode(3);
                 getUserResponse.setOperationMessage("Invalid credentials!");

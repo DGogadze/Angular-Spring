@@ -13,6 +13,9 @@ public class GetUserResponse {
     @JsonProperty("OperationMessage")
     private String operationMessage;
 
+    @JsonProperty("Token")
+    private String token;
+
     @JsonProperty("UserInfo")
     private UserInfo userInfo;
 }

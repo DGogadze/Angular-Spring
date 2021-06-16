@@ -183,6 +183,11 @@ a {
   text-decoration: none
 }
 
+a:hover {
+  color: #ff2341;
+  text-decoration: none;
+}
+
 .hr {
   height: 2px;
   margin: 60px 0 50px 0;
@@ -190,7 +195,9 @@ a {
 }
 
 .foot {
-  text-align: center
+  text-align: center;
+  color:#ff7b2e;
+  text-decoration: none;
 }
 
 .card {

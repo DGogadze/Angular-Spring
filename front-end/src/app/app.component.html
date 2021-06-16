@@ -9,6 +9,7 @@
 </div>
 
 <div class="content" role="main">
-  <app-main></app-main>
+  <app-main *ngIf="!authenticated"></app-main>
+  <app-profile *ngIf="authenticated"></app-profile>
 </div>
 <router-outlet></router-outlet>

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
+import {CookieService} from "ngx-cookie-service";
 
 @Component({
   selector: 'app-main',
@@ -9,8 +10,14 @@ import {environment} from "../../environments/environment";
 })
 export class MainComponent implements OnInit {
 
+  // @ts-ignore
+  loginResponse : LoginResponse;
+  // @ts-ignore
+  registrationResponse : RegistrationResponse;
+
   constructor(
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private cookieService: CookieService
   ) {
   }
 
@@ -23,12 +30,8 @@ export class MainComponent implements OnInit {
     })
   }
 
-  registrationResponse: RegistrationResponse = {OperationCode: -1,OperationMessage: ""}
   registrationRequest: RegistrationRequest = {Email: "",Password: "",Phone: "",Position: "",Username: ""}
-
   loginRequest: LoginRequest = {Username: "",Password: ""}
-  userInfo: UserInfo = {Id:-1,Email:"",Username:"",Phone:"",Position:""}
-  loginResponse: LoginResponse = {OperationCode: 0,OperationMessage: "",UserInfo:this.userInfo}
 
   login(username: string, password: string) {
     this.loginRequest.Username = username
@@ -38,6 +41,7 @@ export class MainComponent implements OnInit {
       this.httpOptions).subscribe(response => {
         this.loginResponse = response
         console.log(this.loginResponse)
+        this.cookieService.set("Token",this.loginResponse.Token)
       }
     )
   }
@@ -50,9 +54,8 @@ export class MainComponent implements OnInit {
       JSON.stringify(this.registrationRequest),
       this.httpOptions).
     subscribe(response => {
-      this.registrationResponse.OperationCode = response.OperationCode
-      this.registrationResponse.OperationMessage = response.OperationMessage
-      console.log(this.registrationResponse)
+      this.registrationResponse = response as RegistrationResponse;
+      console.log(this.registrationResponse);
     })
   }
 }
@@ -73,6 +76,7 @@ export interface RegistrationRequest {
 export interface LoginResponse {
   OperationCode: number,
   OperationMessage: string,
+  Token: string,
   UserInfo: UserInfo
 }
 
