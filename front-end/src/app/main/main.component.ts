@@ -42,6 +42,7 @@ export class MainComponent implements OnInit {
         this.loginResponse = response
         console.log(this.loginResponse)
         this.cookieService.set("Token",this.loginResponse.Token)
+        this.cookieService.set("Username",username)
       }
     )
   }
