@@ -6,10 +6,7 @@ import com.angular.spring.model.RegistrationUserRequest;
 import com.angular.spring.model.RegistrationUserResponse;
 import com.angular.spring.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api")
