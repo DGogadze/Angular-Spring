@@ -5,12 +5,11 @@ import com.angular.spring.model.AuthenticationResponse;
 import com.angular.spring.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api")
+@CrossOrigin("*")
 public class AuthenticationController {
     @Autowired
     public AuthenticationController(AuthenticationService authenticationService) {

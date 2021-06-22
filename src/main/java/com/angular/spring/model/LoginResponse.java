@@ -1,18 +1,19 @@
 package com.angular.spring.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
-public class GetUserResponse {
+public class LoginResponse {
     @JsonProperty("OperationCode")
     private Integer operationCode;
 
     @JsonProperty("OperationMessage")
     private String operationMessage;
 
-    @JsonProperty("UserInfo")
-    private UserInfo userInfo;
+    @JsonProperty("Token")
+    private String token;
+
+    @JsonProperty("Username")
+    private String username;
 }

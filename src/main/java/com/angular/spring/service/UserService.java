@@ -1,6 +1,9 @@
 package com.angular.spring.service;
 
 import com.angular.spring.entities.User;
+import com.angular.spring.enums.GetUserEnums;
+import com.angular.spring.enums.LoginEnums;
+import com.angular.spring.enums.RegistrationEnums;
 import com.angular.spring.model.*;
 import com.angular.spring.repository.UserRepository;
 import com.angular.spring.utils.HashUtils;
@@ -15,46 +18,43 @@ import java.util.Optional;
 @Service
 public class UserService {
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, ResponseHandler responseHandler) {
         this.userRepository = userRepository;
+        this.responseHandler = responseHandler;
     }
 
     private final UserRepository userRepository;
+    private final ResponseHandler responseHandler;
 
     private final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
-    public GetUserResponse findUser(GetUserRequest getUserRequest) {
-        String username = getUserRequest.getUsername();
-        String password = getUserRequest.getPassword();
+    public LoginResponse login(LoginRequest loginRequest) {
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
+
         Optional<User> optionalUser = userRepository.findByUsername(username);
-        GetUserResponse getUserResponse = new GetUserResponse();
+        LoginResponse loginResponse;
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             if (HashUtils.md5hash(password).equals(user.getPassword())) {
-                Long id = user.getId();
-                String email = user.getEmail();
-                String phone = user.getPhone();
-                String position = user.getPosition();
+                loginResponse = responseHandler.handleLoginResponse(LoginEnums.SUCCESS, user);
+            } else loginResponse = responseHandler.handleLoginResponse(LoginEnums.INVALID_CREDENTIALS, null);
+        } else {
+            loginResponse = responseHandler.handleLoginResponse(LoginEnums.INVALID_CREDENTIALS, null);
+        }
+        return loginResponse;
+    }
 
-                UserInfo userInfo = new UserInfo();
-                userInfo.setEmail(email);
-                userInfo.setUsername(username);
-                userInfo.setId(id);
-                userInfo.setPhone(phone);
-                userInfo.setPosition(position);
-
-                getUserResponse.setOperationCode(0);
-                getUserResponse.setOperationMessage("Success");
-                getUserResponse.setUserInfo(userInfo);
-                getUserResponse.setToken(HashUtils.md5hash(username + password));
-            } else {
-                getUserResponse.setOperationCode(3);
-                getUserResponse.setOperationMessage("Invalid credentials!");
-            }
+    public GetUserResponse findUser(GetUserRequest getUserRequest) {
+        String username = getUserRequest.getUsername();
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        GetUserResponse getUserResponse;
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            getUserResponse = responseHandler.handleGetUserResponse(GetUserEnums.SUCCESS, user);
             LOG.info("User request -> " + JsonUtils.parse(getUserRequest) + " => " + JsonUtils.parse(getUserResponse));
         } else {
-            getUserResponse.setOperationCode(1);
-            getUserResponse.setOperationMessage("User not found");
+            getUserResponse = responseHandler.handleGetUserResponse(GetUserEnums.USER_NOT_FOUND, null);
             LOG.info("User request failed -> " + JsonUtils.parse(getUserRequest) + " => " + JsonUtils.parse(getUserResponse));
         }
         return getUserResponse;
@@ -67,14 +67,12 @@ public class UserService {
         String phone = registrationUserRequest.getPhone();
         String position = registrationUserRequest.getPosition();
 
-        RegistrationUserResponse registrationUserResponse = new RegistrationUserResponse();
+        RegistrationUserResponse registrationUserResponse;
         if (userRepository.findByUsername(username).isPresent() || userRepository.findByEmail(email).isPresent()) {
-            registrationUserResponse.setOperationCode(2);
-            registrationUserResponse.setOperationMessage("User with this username or email exist");
+            registrationUserResponse = responseHandler.handleRegistrationResponse(RegistrationEnums.USER_EXIST);
             LOG.info("User registration failed -> " + JsonUtils.parse(registrationUserRequest) + " => " + JsonUtils.parse(registrationUserResponse));
         } else {
-            registrationUserResponse.setOperationCode(0);
-            registrationUserResponse.setOperationMessage("Success");
+            registrationUserResponse = responseHandler.handleRegistrationResponse(RegistrationEnums.SUCCESS);
 
             User user = new User();
             user.setUsername(username);
