@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import {AuthenticationService} from "../services/authentication.service";
 
 @Component({
   selector: 'app-profile',
@@ -9,14 +10,12 @@ import {HttpClient} from "@angular/common/http";
 export class ProfileComponent implements OnInit {
 
   constructor(
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private authenticationService: AuthenticationService
   ) { }
 
-  validate(){
-
-  }
-
   ngOnInit(): void {
+
   }
 
 }

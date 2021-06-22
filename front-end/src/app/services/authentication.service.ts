@@ -16,33 +16,31 @@ export class AuthenticationService {
   constructor(
     private httpClient: HttpClient,
     private cookieService: CookieService
-  ) { }
+  ) {
+  }
 
   httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type':  'application/json', 'Access-Control-Allow-Origin':'*',
-      "Authorization" : this.cookieService.get("Token")
+      'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*',
+      "Authorization": this.cookieService.get("Token")
     })
   }
 
-  validate(){
+  validate(): boolean {
     this.authenticationRequest.Username = this.cookieService.get("Username")
     let requestBodyString = JSON.stringify(this.authenticationRequest)
-    this.httpClient.post<AuthenticationResponse>(this.apiUrl + "auth",requestBodyString,this.httpOptions).subscribe(response => {
-      return response.isAuthenticated
+    let authenticated = false
+    this.httpClient.post<AuthenticationResponse>(this.apiUrl + "auth", requestBodyString, this.httpOptions).subscribe(response => {
+      authenticated = response.isAuthenticated
     })
+    return authenticated
   }
-
-  ngOnInit(): void {
-  }
-
 }
 
-export interface AuthenticationRequest{
-  Username: string,
-  Token: String
+export interface AuthenticationRequest {
+  Username: string
 }
 
-export interface AuthenticationResponse{
+export interface AuthenticationResponse {
   isAuthenticated: boolean
 }

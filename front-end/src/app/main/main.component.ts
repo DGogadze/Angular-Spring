@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {CookieService} from "ngx-cookie-service";
+import {AuthenticationService} from "../services/authentication.service";
 
 @Component({
   selector: 'app-main',
@@ -17,7 +18,8 @@ export class MainComponent implements OnInit {
 
   constructor(
     private httpClient: HttpClient,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private autheticationService: AuthenticationService
   ) {
   }
 
@@ -36,7 +38,7 @@ export class MainComponent implements OnInit {
   login(username: string, password: string) {
     this.loginRequest.Username = username
     this.loginRequest.Password = password
-    this.httpClient.post<LoginResponse>(environment.api_url + "user/get",
+    this.httpClient.post<LoginResponse>(environment.api_url + "login",
       JSON.stringify(this.loginRequest),
       this.httpOptions).subscribe(response => {
         this.loginResponse = response
