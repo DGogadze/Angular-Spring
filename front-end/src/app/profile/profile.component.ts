@@ -9,13 +9,15 @@ import {AuthenticationService} from "../services/authentication.service";
 })
 export class ProfileComponent implements OnInit {
 
+  authenticated = false
+
   constructor(
     private httpClient: HttpClient,
     private authenticationService: AuthenticationService
   ) { }
 
   ngOnInit(): void {
-
+    this.authenticated = this.authenticationService.validate()
   }
 
 }

@@ -8,8 +8,9 @@ import {CookieService} from "ngx-cookie-service";
 })
 export class AuthenticationService {
 
-  // @ts-ignore
-  authenticationRequest: AuthenticationRequest
+  authenticationRequest:AuthenticationRequest = new class implements AuthenticationRequest {
+    Username = "";
+  }
 
   apiUrl = environment.api_url
 
@@ -22,18 +23,17 @@ export class AuthenticationService {
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*',
-      "Authorization": this.cookieService.get("Token")
+      "Authorization": this.cookieService.get('Token')
     })
   }
 
+  // @ts-ignore
   validate(): boolean {
-    this.authenticationRequest.Username = this.cookieService.get("Username")
+    this.authenticationRequest.Username = this.cookieService.get('Username')
     let requestBodyString = JSON.stringify(this.authenticationRequest)
-    let authenticated = false
     this.httpClient.post<AuthenticationResponse>(this.apiUrl + "auth", requestBodyString, this.httpOptions).subscribe(response => {
-      authenticated = response.isAuthenticated
+      return response.Authenticated
     })
-    return authenticated
   }
 }
 
@@ -42,5 +42,5 @@ export interface AuthenticationRequest {
 }
 
 export interface AuthenticationResponse {
-  isAuthenticated: boolean
+  Authenticated: boolean
 }

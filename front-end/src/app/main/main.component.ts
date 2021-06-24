@@ -16,14 +16,17 @@ export class MainComponent implements OnInit {
   // @ts-ignore
   registrationResponse : RegistrationResponse;
 
+  authenticated = false
+
   constructor(
     private httpClient: HttpClient,
     private cookieService: CookieService,
-    private autheticationService: AuthenticationService
+    private authenticationService: AuthenticationService
   ) {
   }
 
   ngOnInit(): void {
+    this.authenticated = this.authenticationService.validate()
   }
 
   httpOptions = {
@@ -42,7 +45,6 @@ export class MainComponent implements OnInit {
       JSON.stringify(this.loginRequest),
       this.httpOptions).subscribe(response => {
         this.loginResponse = response
-        console.log(this.loginResponse)
         this.cookieService.set("Token",this.loginResponse.Token)
         this.cookieService.set("Username",username)
       }
@@ -58,7 +60,6 @@ export class MainComponent implements OnInit {
       this.httpOptions).
     subscribe(response => {
       this.registrationResponse = response as RegistrationResponse;
-      console.log(this.registrationResponse);
     })
   }
 }
