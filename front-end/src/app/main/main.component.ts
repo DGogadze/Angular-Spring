@@ -3,6 +3,8 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {CookieService} from "ngx-cookie-service";
 import {AuthenticationService} from "../services/authentication.service";
+import {AuthenticationResponse} from "../services/authentication.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-main',
@@ -21,12 +23,15 @@ export class MainComponent implements OnInit {
   constructor(
     private httpClient: HttpClient,
     private cookieService: CookieService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private router: Router
   ) {
   }
 
   ngOnInit(): void {
-    this.authenticated = this.authenticationService.validate()
+    this.authenticationService.validate().subscribe((response : AuthenticationResponse) => {
+      this.authenticated = response.Authenticated
+    })
   }
 
   httpOptions = {
@@ -47,6 +52,11 @@ export class MainComponent implements OnInit {
         this.loginResponse = response
         this.cookieService.set("Token",this.loginResponse.Token)
         this.cookieService.set("Username",username)
+
+      if (this.loginResponse.OperationCode === 0){
+        this.router.navigateByUrl("/profile")
+        this.authenticated = true
+      }
       }
     )
   }
@@ -60,6 +70,9 @@ export class MainComponent implements OnInit {
       this.httpOptions).
     subscribe(response => {
       this.registrationResponse = response as RegistrationResponse;
+      if (this.registrationResponse.OperationCode === 0){
+        this.router.navigateByUrl("/profile")
+      }
     })
   }
 }

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {AuthenticationService} from "../services/authentication.service";
+import {AuthenticationResponse} from "../services/authentication.service";
 
 @Component({
   selector: 'app-profile',
@@ -17,7 +18,9 @@ export class ProfileComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.authenticated = this.authenticationService.validate()
+    this.authenticationService.validate().subscribe((response : AuthenticationResponse) => {
+      this.authenticated = response.Authenticated
+    })
   }
 
 }
