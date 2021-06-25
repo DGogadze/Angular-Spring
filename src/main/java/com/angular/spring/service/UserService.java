@@ -6,11 +6,11 @@ import com.angular.spring.enums.LoginEnums;
 import com.angular.spring.enums.RegistrationEnums;
 import com.angular.spring.model.*;
 import com.angular.spring.repository.UserRepository;
-import com.angular.spring.utils.HashUtils;
 import com.angular.spring.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,6 +21,11 @@ public class UserService {
     public UserService(UserRepository userRepository, ResponseHandler responseHandler) {
         this.userRepository = userRepository;
         this.responseHandler = responseHandler;
+    }
+
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     private final UserRepository userRepository;
@@ -36,7 +41,7 @@ public class UserService {
         LoginResponse loginResponse;
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            if (HashUtils.md5hash(password).equals(user.getPassword())) {
+            if (bCryptPasswordEncoder().matches(password, user.getPassword())) {
                 loginResponse = responseHandler.handleLoginResponse(LoginEnums.SUCCESS, user);
             } else loginResponse = responseHandler.handleLoginResponse(LoginEnums.INVALID_CREDENTIALS, null);
         } else {
@@ -76,7 +81,7 @@ public class UserService {
 
             User user = new User();
             user.setUsername(username);
-            user.setPassword(HashUtils.md5hash(password));
+            user.setPassword(bCryptPasswordEncoder().encode(password));
             user.setEmail(email);
             user.setPhone(phone);
             user.setPosition(position);
@@ -84,5 +89,9 @@ public class UserService {
             LOG.info("User registration -> " + JsonUtils.parse(registrationUserRequest));
         }
         return registrationUserResponse;
+    }
+
+    public User findByUsername(String username){
+        return userRepository.findByUsername(username).get();
     }
 }
