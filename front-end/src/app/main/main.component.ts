@@ -50,7 +50,7 @@ export class MainComponent implements OnInit {
       JSON.stringify(this.loginRequest),
       this.httpOptions).subscribe(response => {
         this.loginResponse = response
-        this.cookieService.set("Token",this.loginResponse.Token)
+        this.cookieService.set("Token","Bearer " + this.loginResponse.Token)
         this.cookieService.set("Username",username)
 
       if (this.loginResponse.OperationCode === 0){
