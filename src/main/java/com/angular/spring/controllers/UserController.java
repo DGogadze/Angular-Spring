@@ -6,12 +6,9 @@ import com.angular.spring.security.JwtTokenProvider;
 import com.angular.spring.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-
-import javax.naming.AuthenticationException;
 
 @RestController
 @RequestMapping("/api")
