@@ -15,7 +15,7 @@ public class AuthenticationController {
     public AuthenticationController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
     }
-    AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/auth")
     public AuthenticationResponse authenticationResponse(@RequestBody AuthenticationRequest authenticationRequest, @RequestHeader(HttpHeaders.AUTHORIZATION) String token){

@@ -34,42 +34,7 @@ public class ResponseHandler {
         return registrationUserResponse;
     }
 
-    public GetUserResponse handleGetUserResponse(GetUserEnums status, User user) {
-        GetUserResponse getUserResponse = new GetUserResponse();
-        switch (status) {
-            case SUCCESS: {
-                if (user == null) {
-                    getUserResponse.setOperationCode(2001);
-                    getUserResponse.setOperationMessage("USER NOT PRESENTED");
-                    break;
-                }
-                getUserResponse.setOperationCode(0);
-                getUserResponse.setOperationMessage("Success");
-
-                UserInfo userInfo = new UserInfo();
-                userInfo.setEmail(user.getEmail());
-                userInfo.setUsername(user.getPassword());
-                userInfo.setId(user.getId());
-                userInfo.setPhone(user.getPhone());
-                userInfo.setPosition(user.getPosition());
-
-                getUserResponse.setUserInfo(userInfo);
-                break;
-            }
-            case USER_NOT_FOUND: {
-                getUserResponse.setOperationCode(1);
-                getUserResponse.setOperationMessage("User not found");
-                break;
-            }
-            default: {
-                getUserResponse.setOperationCode(2000);
-                getUserResponse.setOperationMessage("GENERAL ERROR");
-            }
-        }
-        return getUserResponse;
-    }
-
-    public LoginResponse handleLoginResponse(LoginEnums status, User user) {
+    public LoginResponse handleLoginResponse(LoginEnums status, User user, String token) {
         LoginResponse loginResponse = new LoginResponse();
         switch (status) {
             case SUCCESS: {
@@ -81,7 +46,7 @@ public class ResponseHandler {
                 loginResponse.setOperationCode(0);
                 loginResponse.setOperationMessage("Success");
                 loginResponse.setUsername(user.getUsername());
-                loginResponse.setToken(HashUtils.md5hash(user.getUsername() + user.getPassword()));
+                loginResponse.setToken(token);
                 break;
             }
             case INVALID_CREDENTIALS: {

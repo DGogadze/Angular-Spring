@@ -1,10 +1,12 @@
 package com.angular.spring.service;
 
 import com.angular.spring.entities.User;
-import com.angular.spring.enums.GetUserEnums;
 import com.angular.spring.enums.LoginEnums;
 import com.angular.spring.enums.RegistrationEnums;
-import com.angular.spring.model.*;
+import com.angular.spring.model.LoginRequest;
+import com.angular.spring.model.LoginResponse;
+import com.angular.spring.model.RegistrationUserRequest;
+import com.angular.spring.model.RegistrationUserResponse;
 import com.angular.spring.repository.UserRepository;
 import com.angular.spring.utils.JsonUtils;
 import org.slf4j.Logger;
@@ -33,7 +35,7 @@ public class UserService {
 
     private final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
-    public LoginResponse login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest, String token) {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
 
@@ -42,27 +44,12 @@ public class UserService {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             if (bCryptPasswordEncoder().matches(password, user.getPassword())) {
-                loginResponse = responseHandler.handleLoginResponse(LoginEnums.SUCCESS, user);
-            } else loginResponse = responseHandler.handleLoginResponse(LoginEnums.INVALID_CREDENTIALS, null);
+                loginResponse = responseHandler.handleLoginResponse(LoginEnums.SUCCESS, user, token);
+            } else loginResponse = responseHandler.handleLoginResponse(LoginEnums.INVALID_CREDENTIALS, null, token);
         } else {
-            loginResponse = responseHandler.handleLoginResponse(LoginEnums.INVALID_CREDENTIALS, null);
+            loginResponse = responseHandler.handleLoginResponse(LoginEnums.INVALID_CREDENTIALS, null, token);
         }
         return loginResponse;
-    }
-
-    public GetUserResponse findUser(GetUserRequest getUserRequest) {
-        String username = getUserRequest.getUsername();
-        Optional<User> optionalUser = userRepository.findByUsername(username);
-        GetUserResponse getUserResponse;
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            getUserResponse = responseHandler.handleGetUserResponse(GetUserEnums.SUCCESS, user);
-            LOG.info("User request -> " + JsonUtils.parse(getUserRequest) + " => " + JsonUtils.parse(getUserResponse));
-        } else {
-            getUserResponse = responseHandler.handleGetUserResponse(GetUserEnums.USER_NOT_FOUND, null);
-            LOG.info("User request failed -> " + JsonUtils.parse(getUserRequest) + " => " + JsonUtils.parse(getUserResponse));
-        }
-        return getUserResponse;
     }
 
     public RegistrationUserResponse registration(RegistrationUserRequest registrationUserRequest) {
@@ -91,7 +78,7 @@ public class UserService {
         return registrationUserResponse;
     }
 
-    public User findByUsername(String username){
+    public User findByUsername(String username) {
         return userRepository.findByUsername(username).get();
     }
 }
