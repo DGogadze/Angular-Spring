@@ -5,10 +5,19 @@ import com.angular.spring.enums.LoginEnums;
 import com.angular.spring.enums.RegistrationEnums;
 import com.angular.spring.model.LoginResponse;
 import com.angular.spring.model.RegistrationUserResponse;
+import com.angular.spring.security.JwtTokenProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ResponseHandler {
+    @Autowired
+    public ResponseHandler(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
+
+    private final JwtTokenProvider jwtTokenProvider;
+
     public RegistrationUserResponse handleRegistrationResponse(RegistrationEnums status) {
         RegistrationUserResponse registrationUserResponse = new RegistrationUserResponse();
         switch (status) {
@@ -30,7 +39,7 @@ public class ResponseHandler {
         return registrationUserResponse;
     }
 
-    public LoginResponse handleLoginResponse(LoginEnums status, User user, String token) {
+    public LoginResponse handleLoginResponse(LoginEnums status, User user) {
         LoginResponse loginResponse = new LoginResponse();
         switch (status) {
             case SUCCESS: {
@@ -42,7 +51,7 @@ public class ResponseHandler {
                 loginResponse.setOperationCode(0);
                 loginResponse.setOperationMessage("Success");
                 loginResponse.setUsername(user.getUsername());
-                loginResponse.setToken(token);
+                loginResponse.setToken(jwtTokenProvider.createToken(user.getUsername()));
                 break;
             }
             case INVALID_CREDENTIALS: {

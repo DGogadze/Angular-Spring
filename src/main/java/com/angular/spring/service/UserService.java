@@ -35,7 +35,7 @@ public class UserService {
 
     private final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
-    public LoginResponse login(LoginRequest loginRequest, String token) {
+    public LoginResponse login(LoginRequest loginRequest) {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
 
@@ -44,10 +44,10 @@ public class UserService {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             if (bCryptPasswordEncoder().matches(password, user.getPassword())) {
-                loginResponse = responseHandler.handleLoginResponse(LoginEnums.SUCCESS, user, token);
-            } else loginResponse = responseHandler.handleLoginResponse(LoginEnums.INVALID_CREDENTIALS, null, token);
+                loginResponse = responseHandler.handleLoginResponse(LoginEnums.SUCCESS, user);
+            } else loginResponse = responseHandler.handleLoginResponse(LoginEnums.INVALID_CREDENTIALS, null);
         } else {
-            loginResponse = responseHandler.handleLoginResponse(LoginEnums.INVALID_CREDENTIALS, null, token);
+            loginResponse = responseHandler.handleLoginResponse(LoginEnums.INVALID_CREDENTIALS, null);
         }
         return loginResponse;
     }
@@ -76,10 +76,5 @@ public class UserService {
             LOG.info("User registration -> " + JsonUtils.parse(registrationUserRequest));
         }
         return registrationUserResponse;
-    }
-
-    public User findByUsername(String username) {
-        Optional<User> userOptional = userRepository.findUserByUsername(username);
-        return userOptional.orElse(null);
     }
 }
