@@ -8,10 +8,9 @@ import com.angular.spring.model.LoginResponse;
 import com.angular.spring.model.RegistrationUserRequest;
 import com.angular.spring.model.RegistrationUserResponse;
 import com.angular.spring.repository.UserRepository;
-import com.angular.spring.utils.JsonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,36 +19,29 @@ import java.util.Optional;
 @Service
 public class UserService {
     @Autowired
-    public UserService(UserRepository userRepository, ResponseHandler responseHandler) {
+    public UserService(UserRepository userRepository, ResponseHandler responseHandler, AuthenticationManager authenticationManager,BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.responseHandler = responseHandler;
-    }
-
-    @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
+        this.authenticationManager = authenticationManager;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     private final UserRepository userRepository;
     private final ResponseHandler responseHandler;
-
-    private final Logger LOG = LoggerFactory.getLogger(UserService.class);
+    private final AuthenticationManager authenticationManager;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public LoginResponse login(LoginRequest loginRequest) {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
-        Optional<User> optionalUser = userRepository.findUserByUsername(username);
-        LoginResponse loginResponse;
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            if (bCryptPasswordEncoder().matches(password, user.getPassword())) {
-                loginResponse = responseHandler.handleLoginResponse(LoginEnums.SUCCESS, user);
-            } else loginResponse = responseHandler.handleLoginResponse(LoginEnums.INVALID_CREDENTIALS, null);
-        } else {
-            loginResponse = responseHandler.handleLoginResponse(LoginEnums.INVALID_CREDENTIALS, null);
+        Optional<User> userOptional = userRepository.findUserByUsername(username);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return responseHandler.handleLoginResponse(LoginEnums.SUCCESS, user);
         }
-        return loginResponse;
+        return responseHandler.handleLoginResponse(LoginEnums.INVALID_CREDENTIALS, null);
     }
 
     public RegistrationUserResponse registration(RegistrationUserRequest registrationUserRequest) {
@@ -62,18 +54,16 @@ public class UserService {
         RegistrationUserResponse registrationUserResponse;
         if (userRepository.findUserByUsername(username).isPresent() || userRepository.findUserByEmail(email).isPresent()) {
             registrationUserResponse = responseHandler.handleRegistrationResponse(RegistrationEnums.USER_EXIST);
-            LOG.info("User registration failed -> " + JsonUtils.parse(registrationUserRequest) + " => " + JsonUtils.parse(registrationUserResponse));
         } else {
             registrationUserResponse = responseHandler.handleRegistrationResponse(RegistrationEnums.SUCCESS);
 
             User user = new User();
             user.setUsername(username);
-            user.setPassword(bCryptPasswordEncoder().encode(password));
+            user.setPassword(bCryptPasswordEncoder.encode(password));
             user.setEmail(email);
             user.setPhone(phone);
             user.setPosition(position);
             userRepository.save(user);
-            LOG.info("User registration -> " + JsonUtils.parse(registrationUserRequest));
         }
         return registrationUserResponse;
     }

@@ -2,8 +2,6 @@ package com.angular.spring.security;
 
 import com.angular.spring.entities.User;
 import com.angular.spring.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,7 +12,6 @@ import java.util.Optional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private final Logger LOG = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
     @Autowired
     public UserDetailsServiceImpl(UserRepository userRepository) {
@@ -32,7 +29,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }
             return new SecurityUser(user);
         } catch (Exception e) {
-            LOG.error("User not found!");
             return null;
         }
     }

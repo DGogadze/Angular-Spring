@@ -2,7 +2,6 @@ package com.angular.spring.repository;
 
 import com.angular.spring.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
