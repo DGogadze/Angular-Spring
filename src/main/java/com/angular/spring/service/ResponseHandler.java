@@ -3,6 +3,7 @@ package com.angular.spring.service;
 import com.angular.spring.entities.User;
 import com.angular.spring.enums.LoginEnums;
 import com.angular.spring.enums.RegistrationEnums;
+import com.angular.spring.model.AuthenticationResponse;
 import com.angular.spring.model.LoginResponse;
 import com.angular.spring.model.RegistrationUserResponse;
 import com.angular.spring.security.JwtTokenProvider;
@@ -61,5 +62,12 @@ public class ResponseHandler {
             }
         }
         return loginResponse;
+    }
+
+    public AuthenticationResponse handleAuthenticationResponse(String token){
+        AuthenticationResponse authenticationResponse = new AuthenticationResponse();
+        boolean isTokenValid = jwtTokenProvider.validateToken(token);
+        authenticationResponse.setAuthenticated(isTokenValid);
+        return authenticationResponse;
     }
 }
