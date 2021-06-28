@@ -11,9 +11,9 @@ public class LoginResponse {
     @JsonProperty("OperationMessage")
     private String operationMessage;
 
-    @JsonProperty("Token")
-    private String token;
-
     @JsonProperty("Username")
     private String username;
+
+    @JsonProperty("Token")
+    private String token;
 }

@@ -39,7 +39,7 @@ public class UserService {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
 
-        Optional<User> optionalUser = userRepository.findByUsername(username);
+        Optional<User> optionalUser = userRepository.findUserByUsername(username);
         LoginResponse loginResponse;
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
@@ -60,7 +60,7 @@ public class UserService {
         String position = registrationUserRequest.getPosition();
 
         RegistrationUserResponse registrationUserResponse;
-        if (userRepository.findByUsername(username).isPresent() || userRepository.findByEmail(email).isPresent()) {
+        if (userRepository.findUserByUsername(username).isPresent() || userRepository.findUserByEmail(email).isPresent()) {
             registrationUserResponse = responseHandler.handleRegistrationResponse(RegistrationEnums.USER_EXIST);
             LOG.info("User registration failed -> " + JsonUtils.parse(registrationUserRequest) + " => " + JsonUtils.parse(registrationUserResponse));
         } else {
@@ -79,6 +79,7 @@ public class UserService {
     }
 
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username).get();
+        Optional<User> userOptional = userRepository.findUserByUsername(username);
+        return userOptional.orElse(null);
     }
 }

@@ -29,7 +29,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse isAuthenticated(AuthenticationRequest authenticationRequest, String token) {
         String username = authenticationRequest.getUsername();
-        Optional<User> userOptional = userRepository.findByUsername(username);
+        Optional<User> userOptional = userRepository.findUserByUsername(username);
         AuthenticationResponse authenticationResponse = new AuthenticationResponse();
         if (userOptional.isPresent()) {
             User user = userOptional.get();
