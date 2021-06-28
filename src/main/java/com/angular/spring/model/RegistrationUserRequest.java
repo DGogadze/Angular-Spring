@@ -1,9 +1,10 @@
 package com.angular.spring.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.Getter;
 
-@Getter
+@Data
 public class RegistrationUserRequest {
     @JsonProperty("Email")
     private String email;
