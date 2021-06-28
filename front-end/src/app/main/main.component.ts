@@ -2,8 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {CookieService} from "ngx-cookie-service";
-import {AuthenticationService} from "../services/authentication.service";
-import {AuthenticationResponse} from "../services/authentication.service";
+import {AuthenticationResponse, AuthenticationService} from "../services/authentication.service";
 import {Router} from "@angular/router";
 
 @Component({

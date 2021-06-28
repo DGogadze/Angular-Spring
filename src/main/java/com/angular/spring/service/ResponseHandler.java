@@ -1,14 +1,10 @@
 package com.angular.spring.service;
 
 import com.angular.spring.entities.User;
-import com.angular.spring.enums.GetUserEnums;
 import com.angular.spring.enums.LoginEnums;
 import com.angular.spring.enums.RegistrationEnums;
-import com.angular.spring.model.GetUserResponse;
 import com.angular.spring.model.LoginResponse;
 import com.angular.spring.model.RegistrationUserResponse;
-import com.angular.spring.model.UserInfo;
-import com.angular.spring.utils.HashUtils;
 import org.springframework.stereotype.Service;
 
 @Service

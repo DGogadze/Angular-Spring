@@ -1,6 +1,5 @@
 package com.angular.spring.controllers;
 
-import com.angular.spring.entities.User;
 import com.angular.spring.model.LoginRequest;
 import com.angular.spring.model.LoginResponse;
 import com.angular.spring.model.RegistrationUserRequest;
@@ -8,7 +7,6 @@ import com.angular.spring.model.RegistrationUserResponse;
 import com.angular.spring.service.AuthenticationService;
 import com.angular.spring.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,10 +25,10 @@ public class UserController {
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest loginRequest) {
         String token = authenticationService.authenticate(loginRequest);
-        return userService.login(loginRequest,token);
+        return userService.login(loginRequest, token);
     }
 
-    @PostMapping("/user/registration")
+    @PostMapping("/registration")
     public RegistrationUserResponse registrationUser(@RequestBody RegistrationUserRequest registrationUserRequest) {
         return userService.registration(registrationUserRequest);
     }
