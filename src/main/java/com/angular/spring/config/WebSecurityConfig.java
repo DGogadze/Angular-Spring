@@ -1,7 +1,7 @@
 package com.angular.spring.config;
 
-import com.angular.spring.security.JwtConfigurer;
-import com.angular.spring.security.JwtTokenProvider;
+import com.angular.spring.security.jwt.JwtConfigurer;
+import com.angular.spring.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.angular.spring.security;
+package com.angular.spring.security.jwt;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

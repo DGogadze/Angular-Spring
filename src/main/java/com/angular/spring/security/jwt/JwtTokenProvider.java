@@ -1,5 +1,6 @@
-package com.angular.spring.security;
+package com.angular.spring.security.jwt;
 
+import com.angular.spring.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

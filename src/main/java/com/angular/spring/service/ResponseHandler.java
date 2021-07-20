@@ -6,7 +6,7 @@ import com.angular.spring.enums.RegistrationEnums;
 import com.angular.spring.model.AuthenticationResponse;
 import com.angular.spring.model.LoginResponse;
 import com.angular.spring.model.RegistrationUserResponse;
-import com.angular.spring.security.JwtTokenProvider;
+import com.angular.spring.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
