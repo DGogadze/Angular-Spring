@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {Observable, Subscriber} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,6 @@ import {Component} from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-
-}
+  date = new Observable<string>((observer: Subscriber<string>) => {
+    setInterval(() => observer.next(new Date().toString()), 1000);
+  });}
